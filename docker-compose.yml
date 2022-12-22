@@ -1,0 +1,10 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: docker.io/library/postgres
+    environment:
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: testpw
+    ports:
+      - "5432:5432"

@@ -1,0 +1,54 @@
+// schema.prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String?
+  email     String?  @unique
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "users")
+}
+
+model GroceryList {
+  id          String       @id @default(cuid())
+  title       String
+  author      String
+  meals       Meal[]
+  ingredients Ingredient[]
+}
+
+model Meal {
+  id            String        @id @default(cuid())
+  name          String
+  portions      Int
+  ingredients   IngredientForMeal[]
+  groceryListId String
+  groceryList   GroceryList   @relation(fields: [groceryListId], references: [id])
+}
+
+model IngredientForMeal {
+  id     String @id @default(cuid())
+  name   String
+  amount Int
+  unit   String
+  mealId String
+  meal   Meal   @relation(fields: [mealId], references: [id])
+}
+
+model Ingredient {
+  id     String @id @default(cuid())
+  name   String
+  amount Int
+  unit   String
+  groceryListId  String
+  groceryList    GroceryList   @relation(fields: [groceryListId], references: [id])
+}
